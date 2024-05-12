@@ -51,7 +51,6 @@ function App() {
     if (index !== -1) {
       newtodos.splice(index, 1);
     }
-    setTodo(todos[index].todo);
     setTodos(newtodos);
   };
 
@@ -117,126 +116,146 @@ function App() {
     setCompleted([]);
     setTodos(todos);
   };
+  const handleDelComp = (e) => {
+    let newComp = [...completed];
+    let id = e.target.name;
+    let index = completed.findIndex((item) => {
+      return item.id == id;
+    });
+    if (index !== -1) {
+      newComp.splice(index, 1);
+    }
+    setCompleted(newComp);
+  };
 
   return (
     <>
       <Navbar />
-      <div className="flex">
-        <div className="container mx-auto my-2 rounded-2xl  bg-slate-300 p-5 min-h-[100vh] flex justify-between">
-          <div className="container w-1/2">
-            <div className="addTodo">
-              <h2 className="text-lg font-bold">Add a task</h2>
-              <input
-                type="text"
-                onChange={onChange}
-                value={todo}
-                placeholder="Type something to Add"
-                name=""
-                id=""
-                className="w-1/2 p-1 text-slate-500 rounded-md"
-              />
-              <button
-                className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-6 "
-                onClick={handleAdd}
-                disabled={!todo}
-                style={{ display: !todo ? "none" : "inline" }}
-              >
-                Add
-              </button>
-              <button
-                onClick={handleHide}
-                name="showhiddenbutton"
-                className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-6"
-              >
-                {buttonText}
-              </button>
-            </div>
-
-            <h1 className="text-lg font-bold inline-block mr-20">
-              Your To-Dos:
-            </h1>
-            {todos.length == 0 && (
-              <div className="m-5">Nothing to display </div>
-            )}
-
-            <div className="todos flex justify-between flex-col">
-              {todos.map((item) => (
-                <div className="mapDiv flex justify-between my-2 border border-red-50 p-2 rounded-md bg-slate-300" key={item.id}>
-                  <div
-                    className="max-w-60 overflow-hidden text-ellipsis whitespace-nowrap"
-                    title={item.todo}
-                  >
-                    {item.todo}
-                  </div>
-
-                  <div className="buttons flex">
-                    <button
-                      className="bg-neutral-800 rounded-md font-bold py-[0.1rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-1"
-                      onClick={handleEdit}
-                      name={item.id}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="bg-neutral-800 rounded-md font-bold py-[0.1rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-1"
-                      onClick={handleDelete}
-                      name={item.id}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      className="bg-neutral-800 rounded-md font-bold py-[0.1rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-1"
-                      type="checkbox"
-                      name={item.id}
-                      value={todo.isCompleted}
-                      id=""
-                      onClick={handleCheckbox}
-                    >
-                      Completed
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+      <div className="container mx-auto rounded-2xl bg-slate-300 p-5 h-[82vh] overflow-y-auto flex justify-between relative">
+        <div className="container w-1/2 overflow-y-auto relative">
+          <div className="addTodo">
+            <h2 className="text-lg font-bold">Add a task</h2>
+            <input
+              type="text"
+              onChange={onChange}
+              value={todo}
+              placeholder="Type something to Add"
+              name=""
+              id=""
+              className="w-1/2 p-2 text-slate-500 rounded-md"
+            />
+            <button
+              className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-6 "
+              onClick={handleAdd}
+              disabled={!todo}
+              style={{ display: !todo ? "none" : "inline" }}
+            >
+              Add
+            </button>
+            <button
+              onClick={handleHide}
+              name="showhiddenbutton"
+              className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black hover:border-2 hover:border-black   transition-all duration-500 mx-6"
+            >
+              {buttonText}
+            </button>
           </div>
-          <div
-            className="border border-l-slate-100 text-center w-[19rem] rounded-md"
-            style={{ display: hide ? "block" : "none" }}
-          >
-            <div className="flex items-center justify-center">
-              <h2 className="font-bold my-2">Completed Tasks</h2>
-            </div>
-            {completed.length == 0 && <div>Nothing to display </div>}
-            {completed.map((it) => (
+
+          <h1 className="text-lg font-bold inline-block mr-20 m-5">
+            Your To-Dos:
+          </h1>
+          {todos.length === 0 && (
+            <div className="m-5">Nothing to display </div>
+          )}
+
+          <div className="todos flex justify-between flex-col">
+            {todos.map((item) => (
               <div
-                className="flex items-center justify-between my-2 rounded-sm bg-slate-200"
-                key={it.id}
+                className="mapDiv flex justify-between my-2 border border-red-50 p-2 rounded-md bg-slate-300"
+                key={item.id}
               >
                 <div
-                  key={it.id}
-                  className="text-green-500 text-start mx-4 max-w-60 overflow-hidden text-ellipsis whitespace-nowrap"
+                  className="max-w-60 overflow-visible break-words text-ellipsis max-h-20 overflow-y-auto "
+                  title={item.todo}
                 >
-                  {it.completedTask}
+                  {item.todo}
                 </div>
+
+                <div className="buttons flex items-center">
+                  <button
+                    className="bg-neutral-800 rounded-md font-bold  py-[0.1rem] px-2 text-white hover:bg-blue-600  hover:text-white transition-all duration-500 mx-1 max-h-8"
+                    onClick={handleEdit}
+                    name={item.id}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-neutral-800 rounded-md font-bold py-[0.1rem] px-2 text-white hover:bg-red-500 hover:text-white transition-all duration-500 mx-1 max-h-8"
+                    onClick={handleDelete}
+                    name={item.id}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="bg-neutral-800 rounded-md font-bold py-[0.2rem] px-2 text-white hover:bg-green-500 hover:text-white transition-all duration-500 mx-1 max-h-8"
+                    type="checkbox"
+                    name={item.id}
+                    value={todo.isCompleted}
+                    id=""
+                    onClick={handleCheckbox}
+                  >
+                    Completed
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="border border-black text-center w-[35rem] max-h-[28rem] overflow-y-auto rounded-md absolute top-0 right-0">
+          <div className="flex items-center justify-center ">
+            <h2 className="font-bold my-2">Completed Tasks</h2>
+          </div>
+          {completed.length === 0 && <div>Nothing to display </div>}
+          {completed.map((it) => (
+            <div
+              className="flex items-center justify-between my-2  border border-black p-2 bg-slate-200"
+              key={it.id}
+            >
+              <div
+                key={it.id}
+                className="text-green-500 text-start mx-4 max-w-60 overflow-hidden text-ellipsis max-h-12 overflow-y-auto"
+              >
+                {it.completedTask}
+              </div>
+              <div>
                 <button
-                  className="bg-red-600 rounded-md font-bold px-2 text-white hover:bg-white hover:text-red-600 transition-all duration-500"
+                  className="bg-black hover:border hover:border-blue-500 rounded-md font-bold font-2xl py-[0.2rem] px-2 text-white hover:bg-white hover:text-blue-600 transition-all duration-500"
                   onClick={handleIncomplete}
                   name={it.id}
                   title="Mark as incomplete"
                 >
-                  ⛌
+                  Incomplete
+                </button>
+                <button
+                  className="mx-1 bg-black rounded-md font-bold font-2xl py-[0.2rem] px-2 text-white hover:bg-white hover:text-red-600 hover:border hover:border-red-800 transition-all duration-500"
+                  title="Delete completed task"
+                  name={it.id}
+                  onClick={handleDelComp}
+                >
+                  Delete
                 </button>
               </div>
-            ))}
-            <button
-              className="bg-neutral-800 rounded-md font-bold py-[0.1rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-auto"
-              style={{ display: completed.length > 0 ? "block" : "none" }}
-              onClick={handleClear}
-              title="Clear the completed Tasks"
-            >
-              Clear
-            </button>
-          </div>
+            </div>
+          ))}
+          <button
+            className="bg-neutral-800 rounded-md font-bold py-[0.1rem] px-2 text-white  hover:text-red-600 hover:bg-white transition-all duration-500hover:text-black duration-500 mx-auto"
+            style={{ display: completed.length > 0 ? "block" : "none" }}
+            onClick={handleClear}
+            title="Clear the completed Tasks"
+          >
+            Clear
+          </button>
         </div>
       </div>
     </>
