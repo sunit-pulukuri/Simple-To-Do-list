@@ -38,9 +38,9 @@ function App() {
     let newtodos = [...todos];
     if (index !== -1) {
       newtodos.splice(index, 1);
+      setTodos(newtodos);
+      saveToLS(newtodos, "todos"); // Save changes to local storage
     }
-    setTodos(newtodos);
-    saveToLS(newtodos, "todos");
   };
 
   const handleEdit = (e) => {
@@ -50,8 +50,9 @@ function App() {
     let newtodos = [...todos];
     if (index !== -1) {
       newtodos.splice(index, 1);
+      setTodo(todos[index].todo);
+      setTodos(newtodos);
     }
-    setTodos(newtodos);
   };
 
   const onChange = (e) => {
@@ -69,9 +70,9 @@ function App() {
     let newTodos = [...todos];
     if (index !== -1) {
       newTodos.splice(index, 1);
+      setTodos(newTodos);
+      saveToLS(newTodos, "todos"); // Save changes to local storage
     }
-    setTodos(newTodos);
-    saveToLS(newTodos, "todos");
     compLS(updatedCompleted, "completed");
   };
 
@@ -98,10 +99,10 @@ function App() {
     let newCompleted = [...completed];
     if (index !== -1) {
       newCompleted.splice(index, 1);
+      setCompleted(newCompleted);
+      compLS(newCompleted, "completed"); // Save changes to local storage
     }
-    setCompleted(newCompleted);
     setTodos(newTds);
-    compLS(newCompleted, "completed");
   };
 
   const saveToLS = (data, key) => {
@@ -114,8 +115,9 @@ function App() {
 
   const handleClear = () => {
     setCompleted([]);
-    setTodos(todos);
+    compLS([], "completed"); // Save changes to local storage
   };
+
   const handleDelComp = (e) => {
     let newComp = [...completed];
     let id = e.target.name;
@@ -124,15 +126,16 @@ function App() {
     });
     if (index !== -1) {
       newComp.splice(index, 1);
+      setCompleted(newComp);
+      compLS(newComp, "completed"); // Save changes to local storage
     }
-    setCompleted(newComp);
   };
 
   return (
     <>
       <Navbar />
-      <div className="container mx-auto rounded-2xl bg-slate-300 p-5 h-[82vh] overflow-y-auto flex justify-between relative">
-        <div className="container w-1/2 overflow-y-auto relative">
+      <div className="container mx-auto rounded-2xl bg-slate-300 p-5 h-[82vh] overflow-y-auto flex justify-between">
+        <div className="container w-1/2 overflow-y-auto">
           <div className="addTodo">
             <h2 className="text-lg font-bold">Add a task</h2>
             <input
@@ -145,7 +148,7 @@ function App() {
               className="w-1/2 p-2 text-slate-500 rounded-md"
             />
             <button
-              className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-6 "
+              className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black transition-all duration-500 mx-6"
               onClick={handleAdd}
               disabled={!todo}
               style={{ display: !todo ? "none" : "inline" }}
@@ -155,7 +158,7 @@ function App() {
             <button
               onClick={handleHide}
               name="showhiddenbutton"
-              className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black hover:border-2 hover:border-black   transition-all duration-500 mx-6"
+              className="bg-neutral-800 rounded-md font-bold py-[0.4rem] px-2 text-white hover:bg-slate-200 hover:text-black hover:border-2 hover:border-black transition-all duration-500 mx-6"
             >
               {buttonText}
             </button>
@@ -164,7 +167,7 @@ function App() {
           <h1 className="text-lg font-bold inline-block mr-20 m-5">
             Your To-Dos:
           </h1>
-          {todos.length === 0 && (
+          {todos.length == 0 && (
             <div className="m-5">Nothing to display </div>
           )}
 
@@ -211,12 +214,14 @@ function App() {
             ))}
           </div>
         </div>
-
-        <div className="border border-black text-center w-[35rem] max-h-[28rem] overflow-y-auto rounded-md absolute top-0 right-0">
+        <div
+          className="border border-black text-center w-[35rem] max-h-[28rem] overflow-y-auto rounded-md"
+          style={{ display: hide ? "block" : "none" }}
+        >
           <div className="flex items-center justify-center ">
             <h2 className="font-bold my-2">Completed Tasks</h2>
           </div>
-          {completed.length === 0 && <div>Nothing to display </div>}
+          {completed.length == 0 && <div>Nothing to display </div>}
           {completed.map((it) => (
             <div
               className="flex items-center justify-between my-2  border border-black p-2 bg-slate-200"
